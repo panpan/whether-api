@@ -1,15 +1,17 @@
 {
   "name": "whether-api",
   "version": "1.0.0",
-  "main": "src/server.js",
+  "main": "lambda.js",
   "scripts": {
-    "start": "nodemon --harmony src/server.js"
+    "start": "nodemon --harmony src/app.js",
+    "zip": "zip -r whether lambda.js src node_modules"
   },
   "author": "panpan",
   "license": "MIT",
   "dependencies": {
     "@google/maps": "^0.4.5",
     "apollo-server-express": "^1.3.3",
+    "aws-serverless-express": "^3.2.0",
     "body-parser": "^1.18.2",
     "dark-sky": "^1.1.2",
     "express": "^4.16.3",
@@ -20,7 +22,6 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.10.0",
-    "nodemon": "^1.17.2",
-    "ntl": "^1.3.0"
+    "nodemon": "^1.17.2"
   }
 }

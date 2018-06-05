@@ -1,18 +1,21 @@
+'use strict';
+
 const express = require('express');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const bodyParser = require('body-parser');
 
 const schema = require('./schema');
 
-const port = process.env.PORT || 3000;
 const app = express();
 
-if (!process.env.GOOGLE_API_KEY) {
-  throw new Error('set the environment variable GOOGLE_API_KEY!');
-}
-if (!process.env.DARKSKY_API_KEY) {
-  throw new Error('set the environment variable DARKSKY_API_KEY!');
-}
+// const port = process.env.PORT || 3000;
+
+// if (!process.env.GOOGLE_API_KEY) {
+//   throw new Error('set the environment variable GOOGLE_API_KEY!');
+// }
+// if (!process.env.DARKSKY_API_KEY) {
+//   throw new Error('set the environment variable DARKSKY_API_KEY!');
+// }
 
 app.use('/graphql', bodyParser.json(), graphqlExpress({
   schema,
@@ -25,7 +28,7 @@ app.use('/graphql', bodyParser.json(), graphqlExpress({
 }));
 
 app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/graphql',
+  endpointURL: '/dev/graphql',
   query: `query ($address: String!) {
   location(address: $address) {
     formattedAddress
@@ -43,7 +46,9 @@ app.use('/graphiql', graphiqlExpress({
 `,
 }));
 
-app.listen(port, () => {
-  console.log(`graphql server running on http://localhost:${port}/graphql`);
-  console.log(`view graphiql at http://localhost:${port}/graphiql`);
-});
+// app.listen(port, () => {
+//   console.log(`graphql server running on http://localhost:${port}/graphql`);
+//   console.log(`view graphiql at http://localhost:${port}/graphiql`);
+// });
+
+module.exports = app;
