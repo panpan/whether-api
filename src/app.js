@@ -3,6 +3,7 @@
 const express = require('express');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const schema = require('./schema');
 
@@ -17,6 +18,8 @@ const app = express();
 //   throw new Error('set the environment variable DARKSKY_API_KEY!');
 // }
 
+app.use(cors());
+
 app.use('/graphql', bodyParser.json(), graphqlExpress({
   schema,
   context: {
@@ -28,7 +31,7 @@ app.use('/graphql', bodyParser.json(), graphqlExpress({
 }));
 
 app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/dev/graphql',
+  endpointURL: '/prod/graphql',
   query: `query ($address: String!) {
   location(address: $address) {
     formattedAddress
