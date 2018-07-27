@@ -5,6 +5,8 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+require('dotenv').config();
+
 const schema = require('./schema');
 
 const app = express();

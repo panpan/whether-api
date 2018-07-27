@@ -48,6 +48,9 @@ const resolvers = {
   Query: {
     async location(_, args, context) {
       const location = await getLocation(context.secrets.GOOGLE_API_KEY, args.address);
+      if (location.json.status !== 'OK') {
+        throw new Error(`geocoding error: ${location.json.status}`);
+      }
       const result = location.json.results[0];
       const formattedAddress = result.formatted_address;
       const { lat, lng } = result.geometry.location;
