@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "lambda.js",
   "scripts": {
-    "start": "nodemon --harmony src/app.js",
-    "zip": "zip -r whether lambda.js src node_modules"
+    "start": "NODE_ENV=development nodemon --harmony src/app.js",
+    "zip": "NODE_ENV=production zip -r whether lambda.js src node_modules"
   },
   "author": "panpan",
   "license": "MIT",

@@ -18,7 +18,7 @@ const getForecast = (apiKey, coordinates) => (
     .options({
       latitude: coordinates[0],
       longitude: coordinates[1],
-      exclude: ['minutely', 'hourly', 'alerts', 'flags'],
+      exclude: ['alerts', 'flags'],
     })
     .get()
 );
@@ -34,13 +34,23 @@ const typeDefs = `
     forecast: Forecast
   }
 
-  type Forecast {
+   type Forecast {
+    cloudCover: Float
+    humidity: Float
     icon: String
-    temperature: Float
+    precipProbability: Float
     summary: String
-    temperatureHigh: Float
-    temperatureLow: Float
+    temperature: Float
+    uvIndex: Int
+    nextHour: String
+    next48Hours: String
     moonPhase: Float
+    sunriseTime: Int
+    sunsetTime: Int
+    temperatureHigh: Float
+    temperatureHighTime: Int
+    temperatureLow: Float
+    uvIndexTime: Int
   }
 `;
 
@@ -63,20 +73,43 @@ const resolvers = {
   Location: {
     async forecast(root, _, context) {
       const forecast = await getForecast(context.secrets.DARKSKY_API_KEY, root.coordinates);
-      const { icon, temperature } = forecast.currently;
       const {
+        cloudCover,
+        humidity,
+        icon,
+        precipProbability,
         summary,
-        temperatureHigh,
-        temperatureLow,
+        temperature,
+        uvIndex,
+      } = forecast.currently;
+      const nextHour = forecast.minutely.summary;
+      const next48Hours = forecast.hourly.summary;
+      const {
         moonPhase,
+        sunriseTime,
+        sunsetTime,
+        temperatureHigh,
+        temperatureHighTime,
+        temperatureLow,
+        uvIndexTime,
       } = forecast.daily.data[0];
       return {
+        cloudCover,
+        humidity,
         icon,
-        temperature,
+        precipProbability,
         summary,
-        temperatureHigh,
-        temperatureLow,
+        temperature,
+        uvIndex,
+        nextHour,
+        next48Hours,
         moonPhase,
+        sunriseTime,
+        sunsetTime,
+        temperatureHigh,
+        temperatureHighTime,
+        temperatureLow,
+        uvIndexTime,
       };
     },
   },

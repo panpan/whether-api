@@ -5,20 +5,20 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-require('dotenv').config();
-
 const schema = require('./schema');
 
+require('dotenv').config();
+
+if (process.env.NODE_ENV === 'development') {
+  if (!process.env.GOOGLE_API_KEY) {
+    throw new Error('set the environment variable GOOGLE_API_KEY!');
+  }
+  if (!process.env.DARKSKY_API_KEY) {
+    throw new Error('set the environment variable DARKSKY_API_KEY!');
+  }
+}
+
 const app = express();
-
-// const port = process.env.PORT || 3000;
-
-// if (!process.env.GOOGLE_API_KEY) {
-//   throw new Error('set the environment variable GOOGLE_API_KEY!');
-// }
-// if (!process.env.DARKSKY_API_KEY) {
-//   throw new Error('set the environment variable DARKSKY_API_KEY!');
-// }
 
 app.use(cors());
 
@@ -33,27 +33,41 @@ app.use('/graphql', bodyParser.json(), graphqlExpress({
 }));
 
 app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/prod/graphql',
+  endpointURL: 'graphql',
   query: `query ($address: String!) {
   location(address: $address) {
     formattedAddress
     coordinates
     forecast {
+      cloudCover
+      humidity
       icon
-      temperature
+      precipProbability
       summary
-      temperatureHigh
-      temperatureLow
+      temperature
+      uvIndex
+      nextHour
+      next48Hours
       moonPhase
+      sunriseTime
+      sunsetTime
+      temperatureHigh
+      temperatureHighTime
+      temperatureLow
+      uvIndexTime
     }
   }
 }
 `,
 }));
 
-// app.listen(port, () => {
-//   console.log(`graphql server running on http://localhost:${port}/graphql`);
-//   console.log(`view graphiql at http://localhost:${port}/graphiql`);
-// });
+if (process.env.NODE_ENV === 'development') {
+  const port = process.env.PORT || 3000;
 
-module.exports = app;
+  app.listen(port, () => {
+    console.log(`graphql server running on http://localhost:${port}/graphql`);
+    console.log(`view graphiql at http://localhost:${port}/graphiql`);
+  });
+} else {
+  module.exports = app;
+}
